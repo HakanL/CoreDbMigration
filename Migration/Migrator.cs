@@ -130,6 +130,9 @@ namespace Haukcode.Migration
                 // Empty
                 return false;
 
+            if (changeScriptLines.Any(x => x.StartsWith("USE ", StringComparison.OrdinalIgnoreCase)))
+                throw new Exception($"Script {fileName} has a USE keyword in it, not allowed!");
+
             return !changeScriptLines[0].StartsWith(EmptyChangeScriptPlaceholder);
         }
 
