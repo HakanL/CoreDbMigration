@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CoreDbMigration": {
+      "commandName": "Project",
+      "commandLineArgs": "*GENERATE"
+    }
+  }
+}

@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreDbMigration", "CoreDbMigration\CoreDbMigration.csproj", "{C62A170F-5F51-438D-9A33-2A661B44D207}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migration", "Migration\Migration.csproj", "{A996983F-6CEC-4599-A71B-247A4083176B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C62A170F-5F51-438D-9A33-2A661B44D207}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C62A170F-5F51-438D-9A33-2A661B44D207}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C62A170F-5F51-438D-9A33-2A661B44D207}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A996983F-6CEC-4599-A71B-247A4083176B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A996983F-6CEC-4599-A71B-247A4083176B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A996983F-6CEC-4599-A71B-247A4083176B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A996983F-6CEC-4599-A71B-247A4083176B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
