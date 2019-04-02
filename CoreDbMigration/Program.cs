@@ -8,17 +8,35 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Haukcode.CoreDbMigration
 {
+    /// <summary>
+    /// Main command-line application
+    /// </summary>
     public class Program
     {
-        public static int Main(string[] args)
+        /// <summary>
+        /// Execute the migration tool
+        /// </summary>
+        /// <param name="generate">Set to true to generate the EF data model files</param>
+        /// <param name="configFile">Set to use an explicit configuration file</param>
+        /// <param name="secondsToRetryConnection">How many seconds to retry a DB connection until throwing an error (0 = disabled)</param>
+        /// <returns></returns>
+        public static int Main(bool generate = false, FileInfo configFile = null, int secondsToRetryConnection = 0)
         {
-            IConfiguration config = new ConfigurationBuilder()
-                .SetBasePath(Environment.CurrentDirectory)
-                .AddJsonFile("appsettings.json", true)
-                .AddJsonFile($"appsettings.{Environment.MachineName}.json", optional: true)
+            var configBuilder = new ConfigurationBuilder()
+                .SetBasePath(Environment.CurrentDirectory);
+
+            if (configFile != null)
+                configBuilder.AddJsonFile(configFile.FullName, false);
+            else
+                configBuilder
+                    .AddJsonFile("appsettings.json", true)
+                    .AddJsonFile($"appsettings.{Environment.MachineName}.json", optional: true);
+
+            IConfiguration config = configBuilder
                 .AddEnvironmentVariables()
                 .Build();
 
@@ -39,7 +57,7 @@ namespace Haukcode.CoreDbMigration
                     baseConnectionString: config["BaseConnectionString"],
                     migrationDirectory: Path.Combine(config["BaseDirectory"], config["MigrationDirectory"]));
 
-                if (args.Any(x => x.Equals("GENERATE", StringComparison.OrdinalIgnoreCase)))
+                if (generate)
                 {
                     // Generate
                     migrator.CreateMigrationScripts(
@@ -57,7 +75,28 @@ namespace Haukcode.CoreDbMigration
                 else
                 {
                     // Migrate (default)
-                    migrator.MigrateDatabase(config["MigrationDatabaseName"]);
+                    var watch = Stopwatch.StartNew();
+                    while (true)
+                    {
+                        try
+                        {
+                            migrator.MigrateDatabase(config["MigrationDatabaseName"]);
+                        }
+                        catch (System.Data.SqlClient.SqlException ex)
+                        {
+                            if (secondsToRetryConnection > 0 && watch.Elapsed.TotalSeconds < secondsToRetryConnection)
+                            {
+                                Console.WriteLine($"Failed to connect to SQL: {ex.Message}, retrying");
+
+                                Thread.Sleep(2000);
+                                continue;
+                            }
+
+                            throw;
+                        }
+
+                        break;
+                    }
                 }
 
                 return 0;

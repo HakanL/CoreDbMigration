@@ -2,7 +2,7 @@
   "profiles": {
     "CoreDbMigration": {
       "commandName": "Project",
-      "commandLineArgs": "*GENERATE"
+      "commandLineArgs": "--seconds-to-retry-connection 60"
     }
   }
 }
