@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -7,6 +8,16 @@ namespace Haukcode.Migration
 {
     public static class ScriptExecutor
     {
+        public static void EnsureDatabaseIsCreated(string connectionString, string database)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder();
+            optionsBuilder.UseSqlServer($"{connectionString}; Database={database}");
+            using (var context = new DbContext(optionsBuilder.Options))
+            {
+                context.Database.EnsureCreated();
+            }
+        }
+
         public static void ExecuteSqlScript(string connectionString, string database, string script)
         {
             using (var conn = new System.Data.SqlClient.SqlConnection($"{connectionString}; Database={database}"))

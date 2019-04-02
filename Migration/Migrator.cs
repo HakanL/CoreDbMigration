@@ -145,6 +145,9 @@ namespace Haukcode.Migration
             string destinationHash = File.ReadAllLines(latestFileName)[0];
             Console.WriteLine($"Migrate database {databaseName} to destination hash {destinationHash}");
 
+            Console.WriteLine($"Ensure the database {databaseName} exists (create if it doesn't)");
+            ScriptExecutor.EnsureDatabaseIsCreated(this.baseConnectionString, databaseName);
+
             Console.WriteLine($"Extract schema from migration database {databaseName}");
             var migrationDataModel = SchemaExtractor.GenerateDataModel($"{this.baseConnectionString}; Database={databaseName}");
 
