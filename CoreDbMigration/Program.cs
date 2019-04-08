@@ -45,17 +45,23 @@ namespace Haukcode.CoreDbMigration
                 Console.WriteLine("DATABASE MIGRATION");
                 Console.WriteLine();
 
-                if (!Directory.Exists(config["BaseDirectory"]))
+                string baseDirectory = config["BaseDirectory"];
+
+                if (!Path.IsPathRooted(baseDirectory) && configFile != null)
+                    // Base it off the config file
+                    baseDirectory = Path.GetFullPath(Path.Combine(configFile.DirectoryName, baseDirectory));
+
+                if (!Directory.Exists(baseDirectory))
                     throw new ArgumentException("Base directory invalid");
 
-                Console.WriteLine($"Base directory: {Path.GetFullPath(config["BaseDirectory"])}");
+                Console.WriteLine($"Base directory: {Path.GetFullPath(baseDirectory)}");
 
-                if (!Directory.Exists(Path.Combine(config["BaseDirectory"], config["MigrationDirectory"])))
+                if (!Directory.Exists(Path.Combine(baseDirectory, config["MigrationDirectory"])))
                     throw new ArgumentException("Migration directory invalid");
 
                 var migrator = new Migrator(
                     baseConnectionString: config["BaseConnectionString"],
-                    migrationDirectory: Path.Combine(config["BaseDirectory"], config["MigrationDirectory"]));
+                    migrationDirectory: Path.Combine(baseDirectory, config["MigrationDirectory"]));
 
                 if (generate)
                 {
@@ -63,13 +69,13 @@ namespace Haukcode.CoreDbMigration
                     migrator.CreateMigrationScripts(
                         templateDatabaseName: config["TemplateDatabaseName"],
                         migrationDatabaseName: config["MigrationDatabaseName"],
-                        createScriptFileName: Path.Combine(config["BaseDirectory"], config["CreateScript"]));
+                        createScriptFileName: Path.Combine(baseDirectory, config["CreateScript"]));
 
                     if (!string.IsNullOrEmpty(config["ModelsDirectory"]))
                     {
                         // Generate models for the current destination database
                         Console.WriteLine($"Generate EF.Core data models in folder {config["ModelsDirectory"]} for context {config["ContextName"]} from the template database");
-                        ScaffoldGenerator.ExecuteScaffold(config["BaseDirectory"], config["BaseConnectionString"], config["TemplateDatabaseName"], config["ModelsDirectory"], config["ContextName"]);
+                        ScaffoldGenerator.ExecuteScaffold(baseDirectory, config["BaseConnectionString"], config["TemplateDatabaseName"], config["ModelsDirectory"], config["ContextName"]);
                     }
                 }
                 else
@@ -104,6 +110,8 @@ namespace Haukcode.CoreDbMigration
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception: {ex.Message}");
+                Console.WriteLine($"Exception: {ex}");
+
                 return 1;
             }
         }
