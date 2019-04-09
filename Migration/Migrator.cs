@@ -88,7 +88,7 @@ namespace Haukcode.Migration
                 return null;
 
             // Return list of filenames
-            return bestPath.Select(x => $"{x.ToHash}\\From-{x.FromHash}.sql").ToList();
+            return bestPath.Select(x => $"{x.ToHash}{Path.DirectorySeparatorChar}From-{x.FromHash}.sql").ToList();
         }
 
         private IList<IList<(string FromHash, string ToHash)>> CheckPath(IList<(string FromHash, string ToHash)> fullList, string currentHash, string destinationHash, HashSet<string> used)
