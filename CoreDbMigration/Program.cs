@@ -1,6 +1,5 @@
 ﻿using Haukcode.Migration;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.FileExtensions;
 using Microsoft.Extensions.Configuration.Json;
 using System;
 using System.Collections.Generic;
@@ -30,11 +29,17 @@ namespace Haukcode.CoreDbMigration
                 .SetBasePath(Environment.CurrentDirectory);
 
             if (configFile != null)
-                configBuilder.AddJsonFile(configFile.FullName, false);
+            {
+                configBuilder
+                    .AddJsonFile(Path.Combine(configFile.DirectoryName, "appsettings.json"), true)
+                    .AddJsonFile(configFile.FullName, optional: false);
+            }
             else
+            {
                 configBuilder
                     .AddJsonFile("appsettings.json", true)
                     .AddJsonFile($"appsettings.{Environment.MachineName}.json", optional: true);
+            }
 
             IConfiguration config = configBuilder
                 .AddEnvironmentVariables()

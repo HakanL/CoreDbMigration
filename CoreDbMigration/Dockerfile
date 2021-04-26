@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:2.2-stretch-slim AS base
+FROM mcr.microsoft.com/dotnet/runtime:5.0-buster-slim AS base
 WORKDIR /app
 
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-buster AS build
 WORKDIR /src
 COPY ["CoreDbMigration/CoreDbMigration.csproj", "CoreDbMigration/"]
 COPY ["Migration/Migration.csproj", "Migration/"]

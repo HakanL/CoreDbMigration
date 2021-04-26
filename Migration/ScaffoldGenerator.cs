@@ -37,6 +37,8 @@ namespace Haukcode.Migration
             processStartInfo.ArgumentList.Add("--context");
             processStartInfo.ArgumentList.Add(contextName);
             processStartInfo.ArgumentList.Add("--force");
+            processStartInfo.ArgumentList.Add("--no-pluralize");
+            processStartInfo.ArgumentList.Add("--no-onconfiguring");
 
             var scaffoldProcess = new Process
             {

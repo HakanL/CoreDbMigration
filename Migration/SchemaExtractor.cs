@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Scaffolding;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using System;
@@ -11,12 +12,17 @@ namespace Haukcode.Migration
     {
         public static Models.Database GenerateDataModel(string connectionString)
         {
+#pragma warning disable EF1001 // Internal EF Core API usage.
             var loggerFactory = new NullLoggerFactory();
             var loggingOptions = new Microsoft.EntityFrameworkCore.Internal.LoggingOptions();
             var loggerSource = new System.Diagnostics.DiagnosticListener(string.Empty);
-            var logger = new Microsoft.EntityFrameworkCore.Internal.DiagnosticsLogger<DbLoggerCategory.Scaffolding>(loggerFactory, loggingOptions, loggerSource);
+            var loggingDefinitions = new Microsoft.EntityFrameworkCore.SqlServer.Diagnostics.Internal.SqlServerLoggingDefinitions();
+            var contextLogger = new Microsoft.EntityFrameworkCore.Diagnostics.Internal.NullDbContextLogger();
+            var logger = new Microsoft.EntityFrameworkCore.Internal.DiagnosticsLogger<DbLoggerCategory.Scaffolding>(loggerFactory, loggingOptions, loggerSource, loggingDefinitions, contextLogger);
             var factory = new Microsoft.EntityFrameworkCore.SqlServer.Scaffolding.Internal.SqlServerDatabaseModelFactory(logger);
-            var dataModel = factory.Create(connectionString, new string[0], new string[0]);
+            var dbFactoryOptions = new DatabaseModelFactoryOptions();
+            var dataModel = factory.Create(connectionString, dbFactoryOptions);
+#pragma warning restore EF1001 // Internal EF Core API usage.
 
             var model = new Models.Database(dataModel);
 

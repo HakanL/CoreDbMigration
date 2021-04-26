@@ -2,7 +2,7 @@
   "profiles": {
     "CoreDbMigration": {
       "commandName": "Project",
-      "commandLineArgs": "--config-file \"C:\\Projects\\ProphetLabs\\Atlas v2\\test\\docker\\appsettings.HAKANDEV.json\" --seconds-to-retry-connection 60"
+      "commandLineArgs": "--config-file \"C:\\Projects\\ProphetLabs\\Atlas v2\\src\\Database Design\\appsettings.HAKANDEV2019.json\" --seconds-to-retry-connection 60"
     },
     "Docker": {
       "commandName": "Docker"
