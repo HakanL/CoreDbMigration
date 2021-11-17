@@ -14,11 +14,11 @@ namespace Haukcode.Migration
         {
 #pragma warning disable EF1001 // Internal EF Core API usage.
             var loggerFactory = new NullLoggerFactory();
-            var loggingOptions = new Microsoft.EntityFrameworkCore.Internal.LoggingOptions();
+            var loggingOptions = new Microsoft.EntityFrameworkCore.Diagnostics.Internal.LoggingOptions();
             var loggerSource = new System.Diagnostics.DiagnosticListener(string.Empty);
             var loggingDefinitions = new Microsoft.EntityFrameworkCore.SqlServer.Diagnostics.Internal.SqlServerLoggingDefinitions();
             var contextLogger = new Microsoft.EntityFrameworkCore.Diagnostics.Internal.NullDbContextLogger();
-            var logger = new Microsoft.EntityFrameworkCore.Internal.DiagnosticsLogger<DbLoggerCategory.Scaffolding>(loggerFactory, loggingOptions, loggerSource, loggingDefinitions, contextLogger);
+            var logger = new Microsoft.EntityFrameworkCore.Diagnostics.Internal.DiagnosticsLogger<DbLoggerCategory.Scaffolding>(loggerFactory, loggingOptions, loggerSource, loggingDefinitions, contextLogger);
             var factory = new Microsoft.EntityFrameworkCore.SqlServer.Scaffolding.Internal.SqlServerDatabaseModelFactory(logger);
             var dbFactoryOptions = new DatabaseModelFactoryOptions();
             var dataModel = factory.Create(connectionString, dbFactoryOptions);
